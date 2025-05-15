@@ -1,0 +1,333 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block title %}Đặt hàng thành công | MyShop{% endblock %}
+
+{% block style %}
+.order-complete-section {
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    padding: 35px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    position: relative;
+    text-align: center;
+}
+
+.order-complete-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.03) 0%, rgba(46, 204, 113, 0.03) 100%);
+    border-radius: 15px 0 0 15px;
+    z-index: 0;
+}
+
+.success-icon {
+    font-size: 5rem;
+    color: #2ecc71;
+    margin-bottom: 20px;
+    animation: scaleUp 0.5s ease-out;
+}
+
+@keyframes scaleUp {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    60% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: var(--text-dark);
+}
+
+.subtitle {
+    color: var(--text-light);
+    margin-bottom: 30px;
+}
+
+.order-info-card {
+    background-color: #f8f9fa;
+    border-radius: 15px;
+    padding: 25px;
+    margin: 30px 0;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    text-align: left;
+    border-left: 5px solid var(--primary-color);
+    position: relative;
+    z-index: 1;
+}
+
+.order-info-title {
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    color: var(--primary-color);
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.info-item {
+    margin-bottom: 15px;
+}
+
+.info-label {
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 5px;
+    display: block;
+}
+
+.info-value {
+    color: var(--text-light);
+}
+
+.action-btn {
+    padding: 12px 25px;
+    border-radius: 30px;
+    margin: 0 10px;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 600;
+}
+
+.primary-btn {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+}
+
+.primary-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+    color: white;
+}
+
+.outline-btn {
+    background: transparent;
+    color: var(--text-dark);
+    border: 2px solid #eee;
+}
+
+.outline-btn:hover {
+    background: #f8f9fa;
+    transform: translateY(-3px);
+}
+
+/* Thanh tiến trình đơn hàng */
+.progress-track {
+    display: flex;
+    margin: 30px 0;
+    position: relative;
+    max-width: 100%;
+}
+
+.progress-track::before {
+    content: '';
+    height: 4px;
+    width: 100%;
+    background: #e1e4e8;
+    position: absolute;
+    top: 30px;
+    left: 0;
+    z-index: 0;
+}
+
+.progress-step {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.progress-step-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #e1e4e8;
+    margin: 0 auto 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.5rem;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.progress-step.active .progress-step-icon {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+}
+
+.progress-step-text {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin-top: 5px;
+}
+
+.progress-step.active .progress-step-text {
+    color: var(--primary-color);
+}
+
+@media (max-width: 768px) {
+    .order-complete-section {
+        padding: 20px;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .action-btn {
+        display: block;
+        margin: 10px 0;
+    }
+    
+    .progress-track {
+        overflow-x: auto;
+        padding-bottom: 20px;
+    }
+    .progress-step {
+        min-width: 100px;
+    }
+}
+{% endblock %}
+
+{% block content %}
+<div class="order-complete-section">
+    <div class="success-icon">
+        <i class="fas fa-check-circle"></i>
+    </div>
+    
+    <h1 class="page-title">Đặt hàng thành công!</h1>
+    <p class="subtitle">Cảm ơn bạn đã mua sắm tại MyShop. Đơn hàng của bạn đã được tiếp nhận và đang được xử lý.</p>
+    
+    {% if order %}
+    <!-- Thanh tiến trình đơn hàng -->
+    <div class="progress-track-container">
+        <div class="progress-track">
+            <div class="progress-step active" data-step="1">
+                <div class="progress-step-icon">
+                    <i class="fas fa-clipboard-check"></i>
+                </div>
+                <div class="progress-step-text">Đã nhận đơn</div>
+            </div>
+            
+            <div class="progress-step" data-step="2">
+                <div class="progress-step-icon">
+                    <i class="fas fa-box"></i>
+                </div>
+                <div class="progress-step-text">Đang xử lý</div>
+            </div>
+            
+            <div class="progress-step" data-step="3">
+                <div class="progress-step-icon">
+                    <i class="fas fa-shipping-fast"></i>
+                </div>
+                <div class="progress-step-text">Đang giao hàng</div>
+            </div>
+            
+            <div class="progress-step" data-step="4">
+                <div class="progress-step-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <div class="progress-step-text">Đã giao hàng</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="order-info-card">
+        <h5 class="order-info-title">
+            <i class="fas fa-info-circle me-2"></i> Thông tin đơn hàng
+        </h5>
+        
+        <div class="info-grid">
+            <div class="info-item">
+                <span class="info-label">Mã đơn hàng:</span>
+                <span class="info-value">#{{ order.id }}</span>
+            </div>
+            
+            <div class="info-item">
+                <span class="info-label">Ngày đặt hàng:</span>
+                <span class="info-value">{{ order.created_at|date:"d/m/Y H:i" }}</span>
+            </div>
+            
+            <div class="info-item">
+                <span class="info-label">Trạng thái:</span>
+                <span class="info-value">{{ order.get_status_display_vi }}</span>
+            </div>
+            
+            <div class="info-item">
+                <span class="info-label">Tổng tiền:</span>
+                <span class="info-value">{{ order.total_amount|floatformat:0 }} VNĐ</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="order-info-card">
+        <h5 class="order-info-title">
+            <i class="fas fa-shipping-fast me-2"></i> Thông tin giao hàng
+        </h5>
+        
+        <div class="info-grid">
+            <div class="info-item">
+                <span class="info-label">Người nhận:</span>
+                <span class="info-value">{{ order.full_name }}</span>
+            </div>
+            
+            <div class="info-item">
+                <span class="info-label">Email:</span>
+                <span class="info-value">{{ order.email }}</span>
+            </div>
+            
+            <div class="info-item">
+                <span class="info-label">Số điện thoại:</span>
+                <span class="info-value">{{ order.phone }}</span>
+            </div>
+            
+            <div class="info-item">
+                <span class="info-label">Địa chỉ:</span>
+                <span class="info-value">{{ order.address }}</span>
+            </div>
+            
+            <div class="info-item">
+                <span class="info-label">Thành phố:</span>
+                <span class="info-value">{{ order.city }}</span>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <div class="actions mt-4">
+        <a href="{% url 'product_list' %}" class="action-btn primary-btn">
+            <i class="fas fa-shopping-bag me-2"></i> Tiếp tục mua sắm
+        </a>
+        
+        <a href="{% url 'user_account' %}" class="action-btn outline-btn">
+            <i class="fas fa-user me-2"></i> Tài khoản của tôi
+        </a>
+    </div>
+</div>
+{% endblock %}

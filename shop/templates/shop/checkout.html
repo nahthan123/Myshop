@@ -1,0 +1,421 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block title %}Thanh toán | MyShop{% endblock %}
+
+{% block style %}
+.checkout-section {
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    padding: 35px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.checkout-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+    height: 200px;
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.03) 0%, rgba(231, 76, 60, 0.03) 100%);
+    border-radius: 0 15px 0 0;
+    z-index: 0;
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+    color: var(--text-dark);
+    position: relative;
+    display: inline-block;
+    padding-bottom: 10px;
+}
+
+.page-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+    border-radius: 3px;
+}
+
+.checkout-form {
+    background-color: #f8f9fa;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    display: block;
+}
+
+.form-control {
+    border-radius: 8px;
+    border: 2px solid var(--border-color);
+    padding: 12px 15px;
+    width: 100%;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    outline: none;
+}
+
+.order-summary {
+    background-color: #f8f9fa;
+    border-radius: 15px;
+    padding: 25px;
+    margin-top: 30px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+}
+
+.summary-title {
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    color: var(--text-dark);
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.summary-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.summary-label {
+    font-weight: 500;
+    color: var(--text-light);
+}
+
+.summary-value {
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.total-row {
+    font-size: 1.2rem;
+    color: var(--primary-dark);
+}
+
+.order-btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 20px;
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+}
+
+.order-btn:hover {
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+}
+
+.login-notice {
+    text-align: center;
+    background-color: #fff5f5;
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 4px solid var(--accent-color);
+    margin-top: 20px;
+}
+
+.login-notice a {
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.login-notice a:hover {
+    text-decoration: underline;
+}
+
+.product-list {
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.product-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.product-img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 15px;
+}
+
+.product-info {
+    flex: 1;
+}
+
+.product-name {
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 5px;
+}
+
+.product-meta {
+    display: flex;
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.product-quantity {
+    margin-right: 15px;
+}
+
+.product-price {
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+@media (max-width: 768px) {
+    .checkout-section {
+        padding: 20px;
+    }
+}
+{% endblock %}
+
+{% block content %}
+<div class="checkout-section">
+    <h1 class="page-title">
+        <i class="fas fa-credit-card me-2"></i>Thanh toán
+    </h1>
+
+    {% if cart_items %}
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Form thông tin giao hàng -->
+                <form method="post" action="{% url 'complete_order' %}" class="checkout-form">
+                    {% csrf_token %}
+                    <h4 class="mb-4">Thông tin giao hàng</h4>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="full_name" class="form-label">Họ và tên</label>
+                                <input type="text" id="full_name" name="full_name" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" id="email" name="email" class="form-control" required value="{{ user.email }}">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone" class="form-label">Số điện thoại</label>
+                        <input type="tel" id="phone" name="phone" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="address" class="form-label">Địa chỉ chi tiết</label>
+                        <textarea id="address" name="address" class="form-control" rows="2" required placeholder="Số nhà, tên đường..."></textarea>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="ward" class="form-label">Xã/Phường</label>
+                                <input type="text" id="ward" name="ward" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="district" class="form-label">Quận/Huyện</label>
+                                <input type="text" id="district" name="district" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="city" class="form-label">Tỉnh/Thành phố</label>
+                                <select id="city" name="city" class="form-control" required>
+                                    <option value="" selected disabled>Chọn tỉnh thành</option>
+                                    <option value="An Giang">An Giang</option>
+                                    <option value="Bà Rịa - Vũng Tàu">Bà Rịa - Vũng Tàu</option>
+                                    <option value="Bắc Giang">Bắc Giang</option>
+                                    <option value="Bắc Kạn">Bắc Kạn</option>
+                                    <option value="Bạc Liêu">Bạc Liêu</option>
+                                    <option value="Bắc Ninh">Bắc Ninh</option>
+                                    <option value="Bến Tre">Bến Tre</option>
+                                    <option value="Bình Định">Bình Định</option>
+                                    <option value="Bình Dương">Bình Dương</option>
+                                    <option value="Bình Phước">Bình Phước</option>
+                                    <option value="Bình Thuận">Bình Thuận</option>
+                                    <option value="Cà Mau">Cà Mau</option>
+                                    <option value="Cần Thơ">Cần Thơ</option>
+                                    <option value="Cao Bằng">Cao Bằng</option>
+                                    <option value="Đà Nẵng">Đà Nẵng</option>
+                                    <option value="Đắk Lắk">Đắk Lắk</option>
+                                    <option value="Đắk Nông">Đắk Nông</option>
+                                    <option value="Điện Biên">Điện Biên</option>
+                                    <option value="Đồng Nai">Đồng Nai</option>
+                                    <option value="Đồng Tháp">Đồng Tháp</option>
+                                    <option value="Gia Lai">Gia Lai</option>
+                                    <option value="Hà Giang">Hà Giang</option>
+                                    <option value="Hà Nam">Hà Nam</option>
+                                    <option value="Hà Nội">Hà Nội</option>
+                                    <option value="Hà Tĩnh">Hà Tĩnh</option>
+                                    <option value="Hải Dương">Hải Dương</option>
+                                    <option value="Hải Phòng">Hải Phòng</option>
+                                    <option value="Hậu Giang">Hậu Giang</option>
+                                    <option value="Hòa Bình">Hòa Bình</option>
+                                    <option value="Hưng Yên">Hưng Yên</option>
+                                    <option value="Khánh Hòa">Khánh Hòa</option>
+                                    <option value="Kiên Giang">Kiên Giang</option>
+                                    <option value="Kon Tum">Kon Tum</option>
+                                    <option value="Lai Châu">Lai Châu</option>
+                                    <option value="Lâm Đồng">Lâm Đồng</option>
+                                    <option value="Lạng Sơn">Lạng Sơn</option>
+                                    <option value="Lào Cai">Lào Cai</option>
+                                    <option value="Long An">Long An</option>
+                                    <option value="Nam Định">Nam Định</option>
+                                    <option value="Nghệ An">Nghệ An</option>
+                                    <option value="Ninh Bình">Ninh Bình</option>
+                                    <option value="Ninh Thuận">Ninh Thuận</option>
+                                    <option value="Phú Thọ">Phú Thọ</option>
+                                    <option value="Phú Yên">Phú Yên</option>
+                                    <option value="Quảng Bình">Quảng Bình</option>
+                                    <option value="Quảng Nam">Quảng Nam</option>
+                                    <option value="Quảng Ngãi">Quảng Ngãi</option>
+                                    <option value="Quảng Ninh">Quảng Ninh</option>
+                                    <option value="Quảng Trị">Quảng Trị</option>
+                                    <option value="Sóc Trăng">Sóc Trăng</option>
+                                    <option value="Sơn La">Sơn La</option>
+                                    <option value="Tây Ninh">Tây Ninh</option>
+                                    <option value="Thái Bình">Thái Bình</option>
+                                    <option value="Thái Nguyên">Thái Nguyên</option>
+                                    <option value="Thanh Hóa">Thanh Hóa</option>
+                                    <option value="Thừa Thiên Huế">Thừa Thiên Huế</option>
+                                    <option value="Tiền Giang">Tiền Giang</option>
+                                    <option value="TP Hồ Chí Minh">TP Hồ Chí Minh</option>
+                                    <option value="Trà Vinh">Trà Vinh</option>
+                                    <option value="Tuyên Quang">Tuyên Quang</option>
+                                    <option value="Vĩnh Long">Vĩnh Long</option>
+                                    <option value="Vĩnh Phúc">Vĩnh Phúc</option>
+                                    <option value="Yên Bái">Yên Bái</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {% if user.is_authenticated %}
+                        <button type="submit" class="order-btn">
+                            <i class="fas fa-check-circle me-2"></i>Xác nhận đặt hàng
+                        </button>
+                    {% else %}
+                        <div class="login-notice">
+                            <i class="fas fa-lock me-2"></i>Vui lòng <a href="{% url 'login' %}?next={% url 'checkout' %}">đăng nhập</a> để hoàn tất đơn hàng.
+                        </div>
+                    {% endif %}
+                </form>
+            </div>
+            
+            <div class="col-lg-4">
+                <!-- Tóm tắt đơn hàng -->
+                <div class="order-summary">
+                    <h5 class="summary-title">
+                        <i class="fas fa-receipt me-2"></i>Tóm tắt đơn hàng
+                    </h5>
+                    
+                    <div class="product-list">
+                        {% for item in cart_items %}
+                        <div class="product-item">
+                            {% if item.product.image %}
+                                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="product-img">
+                            {% else %}
+                                <img src="{% static 'images/default-product.png' %}" alt="{{ item.product.name }}" class="product-img">
+                            {% endif %}
+                            <div class="product-info">
+                                <div class="product-name">{{ item.product.name }}</div>
+                                <div class="product-meta">
+                                    <span class="product-quantity">SL: {{ item.quantity }}</span>
+                                    <span class="product-price">{{ item.product.price|floatformat:0 }} VNĐ</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="summary-item">
+                        <div class="summary-label">Tạm tính:</div>
+                        <div class="summary-value">{{ total|floatformat:0 }} VNĐ</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Thuế (5%):</div>
+                        <div class="summary-value">{{ tax|floatformat:0 }} VNĐ</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Phí vận chuyển:</div>
+                        <div class="summary-value">Miễn phí</div>
+                    </div>
+                    <div class="summary-item total-row">
+                        <div class="summary-label">Tổng cộng:</div>
+                        <div class="summary-value">{{ final_total|floatformat:0 }} VNĐ</div>
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <a href="{% url 'view_cart' %}" class="btn btn-outline-primary w-100">
+                        <i class="fas fa-arrow-left me-2"></i>Quay lại giỏ hàng
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-shopping-cart mb-3" style="font-size: 4rem; color: #ddd;"></i>
+            <h4>Giỏ hàng của bạn đang trống</h4>
+            <p class="text-muted">Vui lòng thêm sản phẩm vào giỏ hàng trước khi thanh toán.</p>
+            <a href="{% url 'product_list' %}" class="btn btn-primary mt-3">
+                <i class="fas fa-shopping-bag me-2"></i>Tiếp tục mua sắm
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

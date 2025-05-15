@@ -1,0 +1,175 @@
+{% load static %}
+<!-- shop/templates/shop/includes/navbar.html -->
+<nav class="navbar navbar-expand-lg sticky-top navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+            <div class="logo-container d-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, #3498db, #9b59b6); width: 40px; height: 40px; border-radius: 10px; margin-right: 10px; box-shadow: 0 4px 15px rgba(52,152,219,0.3); transition: all 0.3s;">
+                <span style="font-weight: 800; color: white; font-size: 24px; text-shadow: 1px 1px 2px rgba(0,0,0,0.2);">M</span>
+            </div>
+            <span style="font-weight: 700; font-size: 1.6rem; background: linear-gradient(90deg, #3498db, #9b59b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.5px;">Myshop</span>
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarMain">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'home' %}">
+                        <i class="fas fa-home me-1"></i> Trang chủ
+                    </a>
+                </li>
+                
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-list me-1"></i> Danh mục
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="{% url 'product_list' %}?category=PC"><i class="fas fa-desktop me-2"></i>PC</a></li>
+                        <li><a class="dropdown-item" href="{% url 'product_list' %}?category=Laptop"><i class="fas fa-laptop me-2"></i>Laptop</a></li>
+                        <li><a class="dropdown-item" href="{% url 'product_list' %}?category=Laptop Gaming"><i class="fas fa-gamepad me-2"></i>Laptop Gaming</a></li>
+                        <li><a class="dropdown-item" href="{% url 'product_list' %}?category=Laptop office"><i class="fas fa-briefcase me-2"></i>Laptop Văn Phòng</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{% url 'product_list' %}?category=phụ kiện máy tính"><i class="fas fa-keyboard me-2"></i>Phụ kiện máy tính</a></li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <!-- Search Form -->
+            <form class="d-flex mx-auto" action="{% url 'product_list' %}" method="get">
+                <div class="input-group">
+                    <input class="form-control search-input" type="search" placeholder="Tìm kiếm sản phẩm..." aria-label="Search" name="search" value="{% if search %}{{ search }}{% endif %}">
+                    <button class="btn btn-outline-light" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </form>
+            
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link position-relative cart-link" href="{% url 'view_cart' %}">
+                        <i class="fas fa-shopping-cart"></i> Giỏ hàng
+                        {% if request.session.cart %}
+                            {% with cart_items=request.session.cart.values %}
+                                {% if cart_items|length > 0 %}
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                        {{ cart_items|length }}
+                                        <span class="visually-hidden">sản phẩm trong giỏ hàng</span>
+                                    </span>
+                                {% endif %}
+                            {% endwith %}
+                        {% endif %}
+                    </a>
+                </li>
+                
+                {% if user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle user-link" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user-circle me-1"></i> {{ user.username }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="{% url 'user_account' %}"><i class="fas fa-user me-2 text-primary"></i>Tài khoản của tôi</a></li>
+                            <li><a class="dropdown-item" href="{% url 'user_account' %}?tab=orders"><i class="fas fa-history me-2 text-primary"></i>Lịch sử đơn hàng</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="dropdown-item" style="background:none; border:none; padding:0.25rem 1rem; color:inherit; cursor:pointer;">
+                                        <i class="fas fa-sign-out-alt me-2 text-danger"></i>Đăng xuất
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}"><i class="fas fa-sign-in-alt me-1"></i> Đăng nhập</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-light btn-sm rounded-pill ms-2 px-3 py-2" href="{% url 'register' %}"><i class="fas fa-user-plus me-1"></i> Đăng ký</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<style>
+/* Màu sắc chính cho trang chủ */
+:root {
+    --primary-color: #3498db;
+    --accent-color: #ff9800;
+    --secondary-color: #2c3e50;
+    --light-bg: #f8f9fa;
+}
+
+/* Thiết lập màu cho navbar */
+.navbar, .navbar-brand {
+    background: #2c3e50 !important;
+    color: #fff !important;
+}
+
+.navbar .nav-link,
+.navbar .dropdown-item,
+.navbar .navbar-brand {
+    color: #fff !important;
+}
+
+.navbar .nav-link.active,
+.navbar .nav-link:hover,
+.navbar .dropdown-item:hover {
+    color: #ff9800 !important;
+    background: rgba(255,255,255,0.08) !important;
+}
+
+/* Màu nền dropdown menu */
+.navbar .dropdown-menu {
+    background: #23272b !important;   /* Màu trầm, chữ trắng nổi bật */
+    border: none;
+    box-shadow: 0 4px 16px rgba(44,62,80,0.12);
+}
+
+/* Màu chữ trong dropdown */
+.navbar .dropdown-item {
+    color: #fff !important;
+}
+
+/* Màu chữ khi hover trong dropdown */
+.navbar .dropdown-item:hover,
+.navbar .dropdown-item:focus {
+    color: #ff9800 !important;
+    background: rgba(255,255,255,0.08) !important;
+}
+
+/* Các hiệu ứng khác */
+.navbar-brand:hover .logo-container {
+    transform: scale(1.05) rotate(5deg);
+    box-shadow: 0 6px 20px rgba(52,152,219,0.4);
+}
+
+.search-input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    min-width: 300px;
+}
+
+.cart-link:hover i, .user-link:hover i {
+    transform: scale(1.2);
+    transition: transform 0.3s;
+}
+
+.nav-item .badge {
+    transition: all 0.3s;
+}
+
+.nav-item:hover .badge {
+    transform: scale(1.2);
+}
+
+@media (max-width: 992px) {
+    .search-input {
+        min-width: auto;
+    }
+}
+</style>

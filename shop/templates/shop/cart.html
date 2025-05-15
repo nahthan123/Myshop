@@ -1,0 +1,471 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block title %}Giỏ hàng | MyShop{% endblock %}
+
+{% block style %}
+.cart-section {
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    padding: 35px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.cart-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+    height: 200px;
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.03) 0%, rgba(231, 76, 60, 0.03) 100%);
+    border-radius: 0 15px 0 0;
+    z-index: 0;
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+    color: var(--text-dark);
+    position: relative;
+    display: inline-block;
+    padding-bottom: 10px;
+}
+
+.page-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+    border-radius: 3px;
+}
+
+.cart-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 12px;
+    margin-bottom: 30px;
+}
+
+.cart-table th {
+    padding: 15px;
+    background-color: #f8f9fa;
+    color: var(--text-dark);
+    font-weight: 600;
+    border-bottom: 2px solid #eee;
+}
+
+.cart-table thead th:first-child {
+    border-radius: 10px 0 0 10px;
+}
+
+.cart-table thead th:last-child {
+    border-radius: 0 10px 10px 0;
+}
+
+.cart-table td {
+    padding: 18px 15px;
+    vertical-align: middle;
+    background-color: white;
+    border-top: 1px solid #f0f0f0;
+    border-bottom: 1px solid #f0f0f0;
+    transition: all 0.3s;
+}
+
+.cart-table tr:hover td {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transform: translateY(-2px);
+}
+
+.cart-table td:first-child {
+    border-left: 1px solid #f0f0f0;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.cart-table td:last-child {
+    border-right: 1px solid #f0f0f0;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.product-img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+}
+
+.product-img:hover {
+    transform: scale(1.1);
+}
+
+.product-info {
+    display: flex;
+    align-items: center;
+}
+
+.product-details {
+    margin-left: 15px;
+}
+
+.product-name {
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 5px;
+    display: block;
+}
+
+.product-category {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    display: block;
+}
+
+.price {
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.total-price {
+    font-weight: 700;
+    color: var(--accent-color);
+}
+
+.quantity-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.quantity-btn {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: none;
+    background: #f1f3f5;
+    color: var(--text-dark);
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.quantity-btn:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+.quantity-input {
+    width: 45px;
+    height: 35px;
+    text-align: center;
+    font-weight: 600;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    margin: 0 8px;
+}
+
+.quantity-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.action-btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.update-btn {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.update-btn:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.remove-btn {
+    background-color: #f8d7da;
+    color: var(--accent-color);
+}
+
+.remove-btn:hover {
+    background-color: var(--accent-color);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.cart-summary {
+    background-color: #f8f9fa;
+    border-radius: 15px;
+    padding: 25px;
+    margin-top: 30px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.summary-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.summary-label {
+    font-weight: 500;
+    color: var(--text-light);
+}
+
+.summary-value {
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.total-row {
+    font-size: 1.2rem;
+    color: var(--primary-dark);
+}
+
+.checkout-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+    padding: 14px 30px;
+    border-radius: 30px;
+    font-weight: 600;
+    text-decoration: none;
+    margin-top: 20px;
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+    transition: all 0.3s;
+}
+
+.checkout-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+}
+
+.empty-cart {
+    text-align: center;
+    padding: 40px 0;
+}
+
+.empty-cart-icon {
+    font-size: 4rem;
+    color: #ddd;
+    margin-bottom: 20px;
+}
+
+.continue-shopping-btn {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 30px;
+    text-decoration: none;
+    margin-top: 20px;
+    transition: all 0.3s;
+}
+
+.continue-shopping-btn:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.quantity-form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 768px) {
+    .cart-table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    .cart-section {
+        padding: 20px;
+    }
+    
+    .product-details {
+        margin-left: 10px;
+    }
+    
+    .product-img {
+        width: 50px;
+        height: 50px;
+    }
+}
+{% endblock %}
+
+{% block content %}
+<div class="cart-section">
+    <h1 class="page-title">
+        <i class="fas fa-shopping-cart me-2"></i> Giỏ hàng của bạn
+    </h1>
+
+    {% if cart_items %}
+        <div class="table-responsive">
+            <table class="cart-table">
+                <thead>
+                    <tr>
+                        <th style="width: 40%;">Sản phẩm</th>
+                        <th>Giá</th>
+                        <th>Số lượng</th>
+                        <th>Thành tiền</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart_items %}
+                    <tr>
+                        <td>
+                            <div class="product-info">
+                                {% if item.product.image %}
+                                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="product-img">
+                                {% else %}
+                                    <img src="{% static 'images/default-product.png' %}" alt="{{ item.product.name }}" class="product-img">
+                                {% endif %}
+                                <div class="product-details">
+                                    <span class="product-name">{{ item.product.name }}</span>
+                                    <span class="product-category">{{ item.product.category }}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="price">{{ item.product.price|floatformat:0 }} VNĐ</td>
+                        <td>
+                            <form method="post" action="{% url 'update_cart' item.product.id %}" class="quantity-form">
+                                {% csrf_token %}
+                                <div class="quantity-control">
+                                    <button type="button" class="quantity-btn decrease-btn">-</button>
+                                    <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="quantity-input">
+                                    <button type="button" class="quantity-btn increase-btn">+</button>
+                                </div>
+                                <button type="submit" class="d-none update-qty-btn">Cập nhật</button>
+                            </form>
+                        </td>
+                        <td class="total-price">{{ item.total_price|floatformat:0 }} VNĐ</td>
+                        <td>
+                            <form method="post" action="{% url 'remove_from_cart' item.product.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="action-btn remove-btn">
+                                    <i class="fas fa-trash-alt"></i> Xóa
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="cart-summary">
+            <div class="summary-item">
+                <div class="summary-label">Tạm tính:</div>
+                <div class="summary-value">{{ total|floatformat:0 }} VNĐ</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">Thuế (5%):</div>
+                <div class="summary-value">{{ tax|floatformat:0 }} VNĐ</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">Phí vận chuyển:</div>
+                <div class="summary-value">Miễn phí</div>
+            </div>
+            <div class="summary-item total-row">
+                <div class="summary-label">Tổng cộng:</div>
+                <div class="summary-value">{{ final_total|floatformat:0 }} VNĐ</div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="{% url 'checkout' %}" class="checkout-btn">
+                <i class="fas fa-check-circle me-2"></i> Tiến hành thanh toán
+            </a>
+            <a href="{% url 'product_list' %}" class="btn btn-outline-secondary ms-3">
+                <i class="fas fa-arrow-left me-2"></i> Tiếp tục mua sắm
+            </a>
+        </div>
+
+    {% else %}
+        <div class="empty-cart">
+            <div class="empty-cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+            <h3>Giỏ hàng của bạn đang trống</h3>
+            <p class="text-muted">Khám phá cửa hàng của chúng tôi và thêm sản phẩm vào giỏ hàng</p>
+            <a href="{% url 'product_list' %}" class="continue-shopping-btn">
+                <i class="fas fa-shopping-bag me-2"></i> Mua sắm ngay
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Xử lý nút tăng/giảm số lượng
+        const decreaseBtns = document.querySelectorAll('.decrease-btn');
+        const increaseBtns = document.querySelectorAll('.increase-btn');
+        const quantityInputs = document.querySelectorAll('.quantity-input');
+        const updateBtns = document.querySelectorAll('.update-qty-btn');
+        
+        // Xử lý nút giảm
+        decreaseBtns.forEach((btn, index) => {
+            btn.addEventListener('click', function() {
+                const input = quantityInputs[index];
+                let value = parseInt(input.value);
+                if (value > 1) {
+                    input.value = value - 1;
+                    // Tự động cập nhật sau khi thay đổi
+                    updateBtns[index].click();
+                }
+            });
+        });
+        
+        // Xử lý nút tăng
+        increaseBtns.forEach((btn, index) => {
+            btn.addEventListener('click', function() {
+                const input = quantityInputs[index];
+                let value = parseInt(input.value);
+                input.value = value + 1;
+                // Tự động cập nhật sau khi thay đổi
+                updateBtns[index].click();
+            });
+        });
+        
+        // Cập nhật giỏ hàng khi thay đổi số lượng trực tiếp
+        quantityInputs.forEach((input, index) => {
+            input.addEventListener('change', function() {
+                // Tự động cập nhật sau khi thay đổi
+                updateBtns[index].click();
+            });
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MyShop - Cửa hàng công nghệ hàng đầu{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --primary-light: #4895ef;
+            --primary-dark: #3a0ca3;
+            --secondary-color: #00b4d8;
+            --secondary-dark: #0096c7;
+            --accent-color: #f72585;
+            --accent-dark: #b5179e;
+            --success-color: #2ecc71;
+            --success-dark: #27ae60;
+            --warning-color: #ff9f1c;
+            --warning-dark: #f77f00;
+            --dark-color: #212529;
+            --dark-light: #344055;
+            --light-color: #f8f9fa;
+            --bg-color: #f5f7ff;
+            --text-color: #333;
+            --text-light: #6c757d;
+            --border-color: #e9ecef;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .main-container {
+            flex: 1;
+            padding: 30px 0;
+        }
+        
+        .navbar {
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: white;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color) !important;
+            transition: all 0.3s;
+        }
+        
+        .navbar-brand:hover {
+            color: var(--primary-dark) !important;
+            transform: scale(1.05);
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+            color: var(--dark-color) !important;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: var(--primary-color);
+            transition: all 0.3s;
+            transform: translateX(-50%);
+        }
+        
+        .nav-link:hover::after {
+            width: 70%;
+        }
+        
+        .btn {
+            border-radius: 30px;
+            padding: 8px 20px;
+            font-weight: 500;
+            transition: all 0.3s;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-color), var(--success-dark));
+            border: none;
+        }
+        
+        .btn-success:hover {
+            background: linear-gradient(135deg, var(--success-dark), var(--success-color));
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-dark));
+            border: none;
+        }
+        
+        .btn-danger:hover {
+            background: linear-gradient(135deg, var(--accent-dark), var(--accent-color));
+        }
+        
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+        }
+        
+        .card-img-top {
+            transition: all 0.5s;
+        }
+        
+        .card:hover .card-img-top {
+            transform: scale(1.05);
+        }
+        
+        .section-title {
+            position: relative;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+            border-radius: 3px;
+        }
+        
+        .alert {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .alert-success {
+            background-color: rgba(46, 204, 113, 0.1);
+            border-left: 4px solid var(--success-color);
+            color: var(--success-dark);
+        }
+        
+        .alert-danger {
+            background-color: rgba(231, 76, 60, 0.1);
+            border-left: 4px solid var(--accent-color);
+            color: var(--accent-dark);
+        }
+        
+        .alert-info {
+            background-color: rgba(52, 152, 219, 0.1);
+            border-left: 4px solid var(--primary-color);
+            color: var(--primary-dark);
+        }
+        
+        .alert-warning {
+            background-color: rgba(243, 156, 18, 0.1);
+            border-left: 4px solid var(--warning-color);
+            color: var(--warning-dark);
+        }
+        
+        input.form-control, select.form-control, textarea.form-control {
+            border-radius: 8px;
+            border: 2px solid var(--border-color);
+            padding: 10px 15px;
+            transition: all 0.3s;
+        }
+        
+        input.form-control:focus, select.form-control:focus, textarea.form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        a:hover {
+            color: var(--primary-dark);
+            text-decoration: none;
+        }
+        
+        /* Bóng chat giỏ hàng */
+        .cart-bubble-container {
+            position: fixed;
+            top: 50%;
+            left: 30px;
+            transform: translateY(-50%);
+            z-index: 99998;
+            display: flex;
+            align-items: center;
+        }
+
+        #cart-chat-bubble {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        #cart-chat-label {
+            display: inline-block;
+            background: #fff;
+            color: #e74c3c;
+            font-weight: 600;
+            font-size: 1.08rem;
+            padding: 8px 18px 8px 16px;
+            border-radius: 0 18px 18px 0;
+            box-shadow: 0 4px 16px rgba(44,62,80,0.10);
+            margin-left: 8px;
+            vertical-align: middle;
+            position: relative;
+            transition: opacity 0.2s;
+        }
+
+        #cart-btn {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #e74c3c, #ff7675);
+            border-radius: 50%;
+            box-shadow: 0 4px 16px rgba(44,62,80,0.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+
+        #cart-btn:hover {
+            box-shadow: 0 8px 32px rgba(44,62,80,0.28);
+            transform: scale(1.08);
+        }
+
+        #cart-items-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #3498db;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            border: 2px solid white;
+        }
+
+        #cart-menu {
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            top: 0;
+            left: 70px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(44,62,80,0.18);
+            padding: 12px;
+            min-width: 300px;
+            max-width: 400px;
+            max-height: 400px;
+            overflow-y: auto;
+            animation: fadeInUp 0.3s;
+        }
+
+        .cart-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .cart-menu-item {
+            display: flex;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .cart-menu-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 10px;
+        }
+
+        .cart-item-details {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+
+        .cart-item-price {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .cart-item-quantity {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .cart-menu-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        .cart-total {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .cart-menu-footer .btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+        }
+
+        .empty-cart-message {
+            text-align: center;
+            padding: 20px 0;
+            color: #7f8c8d;
+        }
+
+        /* Bóng chat hỗ trợ */
+        .support-bubble-container {
+            position: fixed;
+            bottom: 110px; /* Cao hơn nút giỏ hàng */
+            right: 30px;
+            z-index: 99997;
+            display: flex;
+            align-items: center;
+        }
+
+        #multi-chat-bubble {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        #multi-chat-label {
+            display: inline-block;
+            background: #fff;
+            color: #3498db;
+            font-weight: 600;
+            font-size: 1.08rem;
+            padding: 8px 18px 8px 16px;
+            border-radius: 18px 0 0 18px;
+            box-shadow: 0 4px 16px rgba(44,62,80,0.10);
+            margin-right: 8px;
+            vertical-align: middle;
+            position: relative;
+            right: 0;
+            transition: opacity 0.2s;
+        }
+
+        #multi-chat-btn {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #3498db, #9b59b6);
+            border-radius: 50%;
+            box-shadow: 0 4px 16px rgba(44,62,80,0.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+
+        #multi-chat-btn:hover {
+            box-shadow: 0 8px 32px rgba(44,62,80,0.28);
+            transform: scale(1.08);
+        }
+
+        #multi-chat-menu {
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(44,62,80,0.18);
+            padding: 12px 0;
+            min-width: 180px;
+            animation: fadeInUp 0.3s;
+        }
+
+        #multi-chat-menu a {
+            display: flex;
+            align-items: center;
+            padding: 10px 18px;
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        #multi-chat-menu a:hover {
+            background: #f8f9fa;
+            color: #ff9800;
+        }
+
+        #multi-chat-menu img {
+            margin-right: 10px;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        
+        @media (max-width: 600px) {
+            .cart-bubble-container {
+                left: 15px;
+            }
+            
+            #cart-chat-label {
+                display: none;
+            }
+            
+            #multi-chat-label {
+                display: none;
+            }
+            
+            #cart-menu {
+                left: 0;
+                min-width: 250px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            #cart-menu {
+                max-width: 300px;
+            }
+        }
+        
+        /* Hiệu ứng chuyển động khi hover cả nút */
+        #cart-chat-bubble:hover #cart-btn {
+            transform: scale(1.08);
+            box-shadow: 0 8px 32px rgba(44,62,80,0.28);
+        }
+        
+        #cart-chat-bubble:hover #cart-chat-label {
+            background: #fff5f5;
+        }
+        
+        {% block style %}{% endblock %}
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    {% include "shop/includes/navbar.html" %}
+    
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="container">
+            {% if messages %}
+                <div class="messages mb-4">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            <i class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'error' %}fa-exclamation-circle{% elif message.tags == 'info' %}fa-info-circle{% elif message.tags == 'warning' %}fa-exclamation-triangle{% endif %} me-2"></i>{{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    {% include "shop/includes/footer.html" %}
+    
+    <!-- Cart Bubble -->
+    <div class="cart-bubble-container">
+        <div id="cart-chat-bubble">
+            <div id="cart-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#FFFFFF" viewBox="0 0 16 16">
+                    <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                </svg>
+                <span id="cart-items-count">0</span>
+            </div>
+            <span id="cart-chat-label">Giỏ hàng của bạn</span>
+            <div id="cart-menu">
+                <div class="cart-menu-header">
+                    <span>Giỏ hàng của bạn</span>
+                    <button class="btn-close" id="cart-menu-close"></button>
+                </div>
+                <div id="cart-items-container">
+                    <!-- Sản phẩm sẽ được thêm vào đây bằng JavaScript -->
+                </div>
+                <div class="cart-menu-footer">
+                    <div class="cart-total">Tổng cộng: <span id="cart-total-amount">0 VNĐ</span></div>
+                    <a href="{% url 'view_cart' %}" class="btn btn-primary">Xem giỏ hàng</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Support Bubble -->
+    <div class="support-bubble-container">
+        <div id="multi-chat-bubble">
+            <span id="multi-chat-label">Liên hệ hỗ trợ</span>
+            <div id="multi-chat-btn">
+                <img src="https://img.icons8.com/fluency/48/000000/chat.png" alt="Chat" />
+            </div>
+            <div id="multi-chat-menu">
+                <a href="https://www.facebook.com/tenfanpage" target="_blank" rel="noopener">
+                    <img src="https://img.icons8.com/color/32/000000/facebook-new.png" /> Facebook
+                </a>
+                <a href="mailto:yourmail@gmail.com">
+                    <img src="https://img.icons8.com/color/32/000000/gmail-new.png" /> Gmail
+                </a>
+                <a href="https://zalo.me/yourzaloid" target="_blank" rel="noopener">
+                    <img src="https://img.icons8.com/color/32/000000/zalo.png" /> Zalo
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Base JS -->
+    <script>
+        // Khai báo hàm cập nhật giỏ hàng trong global scope
+        let updateCartDisplay;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cart Bubble Logic
+            const cartBtn = document.getElementById('cart-btn');
+            const cartMenu = document.getElementById('cart-menu');
+            const cartMenuClose = document.getElementById('cart-menu-close');
+            const cartItemsCount = document.getElementById('cart-items-count');
+            const cartItemsContainer = document.getElementById('cart-items-container');
+            const cartTotalAmount = document.getElementById('cart-total-amount');
+            let cartOpen = false;
+            
+            // Định nghĩa hàm cập nhật giỏ hàng như một hàm global
+            updateCartDisplay = function() {
+                fetch('{% url "view_cart" %}?format=json', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Cập nhật số lượng
+                    const itemCount = data.cart_items ? data.cart_items.length : 0;
+                    if (cartItemsCount) cartItemsCount.textContent = itemCount;
+                    
+                    // Xử lý chỉ khi các phần tử tồn tại
+                    if (cartItemsContainer && cartTotalAmount) {
+                        // Xóa nội dung cũ
+                        cartItemsContainer.innerHTML = '';
+                        
+                        if (data.cart_items && data.cart_items.length > 0) {
+                            // Thêm các mục vào giỏ hàng
+                            data.cart_items.forEach(item => {
+                                const cartItem = document.createElement('div');
+                                cartItem.className = 'cart-menu-item';
+                                
+                                // Sử dụng hình ảnh sản phẩm nếu có, nếu không thì dùng hình mặc định
+                                const imgSrc = item.product.image ? item.product.image : '/static/images/default-product.png';
+                                
+                                cartItem.innerHTML = `
+                                    <img src="${imgSrc}" alt="${item.product.name}">
+                                    <div class="cart-item-details">
+                                        <div class="cart-item-name">${item.product.name}</div>
+                                        <div class="cart-item-price">${item.product.price.toLocaleString()} VNĐ</div>
+                                        <div class="cart-item-quantity">Số lượng: ${item.quantity}</div>
+                                    </div>
+                                `;
+                                
+                                cartItemsContainer.appendChild(cartItem);
+                            });
+                            
+                            // Cập nhật tổng tiền
+                            cartTotalAmount.textContent = `${data.total.toLocaleString()} VNĐ`;
+                        } else {
+                            // Hiển thị thông báo giỏ hàng trống
+                            cartItemsContainer.innerHTML = `
+                                <div class="empty-cart-message">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                                    </svg>
+                                    <p>Giỏ hàng của bạn đang trống</p>
+                                    <a href="{% url 'product_list' %}" class="btn btn-sm btn-outline-primary">Mua sắm ngay</a>
+                                </div>
+                            `;
+                            cartTotalAmount.textContent = '0 VNĐ';
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching cart data:', error);
+                    if (cartItemsContainer) {
+                        cartItemsContainer.innerHTML = '<div class="empty-cart-message">Không thể tải dữ liệu giỏ hàng</div>';
+                    }
+                });
+            };
+            
+            // Cập nhật giỏ hàng khi tải trang
+            updateCartDisplay();
+            
+            // Hiển thị/ẩn menu giỏ hàng khi nhấp vào nút
+            if (cartBtn && cartMenu) {
+                cartBtn.onclick = function() {
+                    if (!cartOpen) {
+                        cartOpen = true;
+                        cartMenu.style.display = 'flex';
+                        updateCartDisplay(); // Cập nhật dữ liệu khi mở
+                    } else {
+                        cartOpen = false;
+                        cartMenu.style.display = 'none';
+                    }
+                };
+                
+                // Đóng menu khi nhấp vào nút đóng
+                if (cartMenuClose) {
+                    cartMenuClose.onclick = function(e) {
+                        e.stopPropagation();
+                        cartOpen = false;
+                        cartMenu.style.display = 'none';
+                    };
+                }
+                
+                // Đóng menu khi nhấp ra ngoài
+                document.addEventListener('click', function(e) {
+                    if (!cartBtn.contains(e.target) && !cartMenu.contains(e.target)) {
+                        cartOpen = false;
+                        cartMenu.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Support Bubble Logic
+            const supportBtn = document.getElementById('multi-chat-btn');
+            const supportMenu = document.getElementById('multi-chat-menu');
+            let supportOpen = false;
+            
+            if (supportBtn && supportMenu) {
+                supportBtn.onclick = function() {
+                    supportOpen = !supportOpen;
+                    supportMenu.style.display = supportOpen ? 'flex' : 'none';
+                };
+                
+                // Đóng menu khi nhấp ra ngoài
+                document.addEventListener('click', function(e) {
+                    if (!supportBtn.contains(e.target) && !supportMenu.contains(e.target)) {
+                        supportMenu.style.display = 'none';
+                        supportOpen = false;
+                    }
+                });
+            }
+        });
+    </script>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

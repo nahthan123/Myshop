@@ -1,0 +1,604 @@
+{% extends 'shop/base.html' %}
+
+{% load static %}
+{% load humanize %}
+
+{% block title %}Danh sách sản phẩm | MyShop{% endblock %}
+
+{% block style %}
+.product-card {
+    height: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(67, 97, 238, 0.08), 0 1.5px 4px rgba(44, 62, 80, 0.06);
+    transition: box-shadow 0.3s, transform 0.3s;
+    background: #fff;
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card:hover {
+    box-shadow: 0 8px 32px rgba(67, 97, 238, 0.18), 0 3px 8px rgba(44, 62, 80, 0.12);
+    transform: translateY(-6px) scale(1.03);
+}
+
+.product-img-container {
+    height: 200px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+    border-radius: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.product-card:hover .product-img {
+    transform: scale(1.08) rotate(-2deg);
+}
+
+.card-body {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-title {
+    height: 50px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.product-price {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--accent-color);
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+.card-text {
+    height: 60px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    margin-bottom: 0;
+}
+
+.rating-stars {
+    color: var(--warning-color);
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+}
+
+.rating-count {
+    color: var(--text-light);
+    font-size: 0.85rem;
+    margin-left: 5px;
+}
+
+.category-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+    font-size: 0.9em;
+    padding: 6px 12px;
+    border-radius: 12px;
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.filter-section {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.category-select-box {
+    margin-bottom: 20px;
+}
+
+.btn-primary, .btn-outline-primary {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #fff;
+}
+
+.btn-primary:hover, .btn-outline-primary:hover {
+    background: var(--primary-dark);
+    border-color: var(--primary-dark);
+    color: #fff;
+}
+
+.btn-success {
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.btn-success:hover {
+    opacity: 0.92;
+    transform: scale(1.04);
+}
+
+.add-to-cart-btn {
+    background: var(--primary-color) !important;
+    color: #fff !important;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    width: 100%;
+    text-align: center;
+    box-shadow: none;
+    transition: background 0.2s, color 0.2s;
+    padding: 12px 0;
+    margin-top: 0;
+}
+
+.add-to-cart-btn:hover, .add-to-cart-btn:focus {
+    background: var(--primary-dark) !important;
+    color: #fff !important;
+}
+
+.filter-sort-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: stretch;
+    gap: 16px;
+    max-width: 900px;
+    margin: 0 auto 24px auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.filter-btn {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 260px;
+    width: 100%;
+    text-align: center;
+    border-radius: 4px !important;
+    background: #fff !important;
+    color: #6c757d !important;
+    border-width: 2px;
+    font-weight: 500;
+    padding: 12px 0;
+    box-shadow: none;
+    transition: background 0.2s, color 0.2s;
+    word-break: break-word;
+}
+
+.filter-btn:hover, .filter-btn:focus {
+    background: #f8f9fa !important;
+    color: #343a40 !important;
+}
+
+.filter-btn.active, .filter-btn.active:hover {
+    background: var(--primary-color) !important;
+    color: #fff !important;
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 2px 8px rgba(44,62,80,0.12);
+}
+
+@media (max-width: 600px) {
+    .filter-sort-bar {
+        gap: 8px;
+    }
+    .filter-btn {
+        min-width: 90px;
+        font-size: 0.95rem;
+        padding: 0.5rem 0.5rem;
+    }
+}
+
+.container {
+    max-width: 1400px;
+}
+
+#multi-chat-bubble {
+  display: flex;
+  align-items: center;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 99999;
+}
+
+#multi-chat-label {
+  display: inline-block;
+  background: #fff;
+  color: #3498db;
+  font-weight: 600;
+  font-size: 1.08rem;
+  padding: 8px 18px 8px 16px;
+  border-radius: 18px 0 0 18px;
+  box-shadow: 0 4px 16px rgba(44,62,80,0.10);
+  margin-right: 8px;
+  vertical-align: middle;
+  position: relative;
+  right: 0;
+  transition: opacity 0.2s;
+}
+
+#multi-chat-btn {
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, #3498db, #ff9800);
+  border-radius: 50%;
+  box-shadow: 0 4px 16px rgba(44,62,80,0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+#multi-chat-btn:hover {
+  box-shadow: 0 8px 32px rgba(44,62,80,0.28);
+  transform: scale(1.08);
+}
+
+#multi-chat-btn img {
+  width: 32px;
+  height: 32px;
+}
+
+#multi-chat-menu {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  bottom: 70px;
+  right: 0;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(44,62,80,0.18);
+  padding: 12px 0;
+  min-width: 180px;
+  animation: fadeInUp 0.3s;
+}
+
+#multi-chat-menu a {
+  display: flex;
+  align-items: center;
+  padding: 10px 18px;
+  color: #2c3e50;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
+}
+
+#multi-chat-menu a:hover {
+  background: #f8f9fa;
+  color: #ff9800;
+}
+
+#multi-chat-menu img {
+  margin-right: 10px;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+
+@media (max-width: 600px) {
+  #multi-chat-label {
+    display: none;
+  }
+}
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Trang chủ</a></li>
+            <li class="breadcrumb-item active">Danh sách sản phẩm</li>
+            {% if category %}
+            <li class="breadcrumb-item active">{{ category }}</li>
+            {% endif %}
+        </ol>
+    </nav>
+
+    <div class="filter-section mb-4" id="filter-section">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h5 class="mb-0">
+                    {% if category %}
+                        <span class="badge bg-primary">{{ category }}</span>
+                    {% else %}
+                        <span>Tất cả sản phẩm</span>
+                    {% endif %}
+                    
+                    {% if search %}
+                        <span class="ms-2">Kết quả tìm kiếm cho: <strong>"{{ search }}"</strong></span>
+                    {% endif %}
+                </h5>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <div class="filter-sort-bar">
+                    <a href="{% url 'product_list' %}#products-section" class="btn btn-outline-secondary btn-lg filter-btn">
+                        <i class="fas fa-sync-alt"></i> Đặt lại bộ lọc
+                    </a>
+                    <a href="?sort=price_asc{% if category %}&category={{ category }}{% endif %}{% if search %}&search={{ search }}{% endif %}{% if min_price %}&min_price={{ min_price }}{% endif %}{% if max_price %}&max_price={{ max_price }}{% endif %}#products-section" class="btn btn-outline-secondary btn-lg filter-btn {% if request.GET.sort == 'price_asc' %}active{% endif %}">
+                        Giá thấp đến cao
+                    </a>
+                    <a href="?sort=price_desc{% if category %}&category={{ category }}{% endif %}{% if search %}&search={{ search }}{% endif %}{% if min_price %}&min_price={{ min_price }}{% endif %}{% if max_price %}&max_price={{ max_price }}{% endif %}#products-section" class="btn btn-outline-secondary btn-lg filter-btn {% if request.GET.sort == 'price_desc' %}active{% endif %}">
+                        Giá cao đến thấp
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-lg-7">
+            <form action="{% url 'product_list' %}" method="get" class="d-flex">
+                <div class="input-group">
+                    <select name="category" class="form-select" style="max-width: 200px;">
+                        <option value="">Tất cả danh mục</option>
+                        <option value="PC" {% if category == 'PC' %}selected{% endif %}>PC</option>
+                        <option value="Laptop" {% if category == 'Laptop' %}selected{% endif %}>Laptop</option>
+                        <option value="Laptop Gaming" {% if category == 'Laptop Gaming' %}selected{% endif %}>Laptop Gaming</option>
+                        <option value="Laptop office" {% if category == 'Laptop office' %}selected{% endif %}>Laptop Văn Phòng</option>
+                        <option value="phụ kiện máy tính" {% if category == 'phụ kiện máy tính' %}selected{% endif %}>Phụ kiện máy tính</option>
+                    </select>
+                    <input type="text" name="search" class="form-control" placeholder="Tìm kiếm sản phẩm..." value="{% if search %}{{ search }}{% endif %}">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fas fa-search"></i> Tìm kiếm
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="col-lg-5">
+            <form method="get" class="d-flex" id="price-filter-form">
+                <div class="input-group">
+                    <input type="number" min="0" class="form-control" name="min_price" placeholder="Giá từ" value="{{ min_price|default_if_none:'' }}">
+                    <input type="number" min="0" class="form-control" name="max_price" placeholder="Đến" value="{{ max_price|default_if_none:'' }}">
+                    {% if category %}
+                        <input type="hidden" name="category" value="{{ category }}">
+                    {% endif %}
+                    {% if search %}
+                        <input type="hidden" name="search" value="{{ search }}">
+                    {% endif %}
+                    <button type="submit" class="btn btn-outline-primary">
+                        <i class="fas fa-filter"></i> Lọc giá
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="products-section">
+    {% if page_obj and page_obj.object_list %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 mb-5">
+            {% for product in page_obj %}
+            <div class="col">
+                <a href="{% url 'product_detail' product.pk %}" class="text-decoration-none text-dark" style="display:block; height: 100%;">
+                    <div class="card product-card h-100" style="cursor:pointer;">
+                        <div class="position-relative">
+                            <span class="category-badge badge bg-info">{{ product.get_category_display }}</span>
+                            <div class="product-img-container">
+                                {% if product.image %}
+                                    <img src="{{ product.image.url }}" class="product-img" alt="{{ product.name }}">
+                                {% else %}
+                                    <img src="{% static 'images/no-image.png' %}" class="product-img" alt="No image">
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title product-title">{{ product.name }}</h5>
+                            <p class="product-price mb-2 text-danger fw-bold" style="font-size:1.2rem;">
+                                {{ product.price|floatformat:0|intcomma }} <span class="text-secondary" style="font-size:1rem;">₫</span>
+                            </p>
+                            
+            
+                            <div class="rating-stars">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= product.rating %}
+                                        <i class="fas fa-star"></i>
+                                    {% elif forloop.counter <= product.rating|add:0.5 %}
+                                        <i class="fas fa-star-half-alt"></i>
+                                    {% else %}
+                                        <i class="far fa-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                                <span class="rating-count">({{ product.rating_count|default:"0" }})</span>
+                            </div>
+                            
+                            <p class="card-text small text-muted">
+                                {{ product.description|truncatechars:100 }}
+                            </p>
+                        </div>
+                        <div class="card-footer bg-white border-top-0 d-flex justify-content-end">
+                            <form action="{% url 'add_to_cart' product.id %}" method="post" class="d-inline add-to-cart-form w-100" onclick="event.stopPropagation();">
+                                {% csrf_token %}
+                                <input type="hidden" name="next" value="{{ request.path }}">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="button" class="btn btn-lg add-to-cart-btn" data-product-id="{{ product.id }}">
+                                    <span>
+                                        <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M7 18c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm10 0c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm-12.293-2.707l1.414 1.414c.195.195.451.293.707.293h12.586c.256 0 .512-.098.707-.293l1.414-1.414c.391-.391.391-1.023 0-1.414l-1.414-1.414c-.195-.195-.451-.293-.707-.293h-12.586c-.256 0-.512.098-.707.293l-1.414 1.414c-.391.391-.391 1.023 0 1.414zm15.293-7.293v-2c0-1.104-.896-2-2-2h-2v-2c0-1.104-.896-2-2-2s-2 .896-2 2v2h-2c-1.104 0-2 .896-2 2v2h12zm-2-2h-8v-2h8v2z"/>
+                                        </svg>
+                                    </span>
+                                    Thêm vào giỏ hàng
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <nav>
+          <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?{% if category %}category={{ category }}&{% endif %}{% if search %}search={{ search }}&{% endif %}page={{ page_obj.previous_page_number }}#products-section">&laquo;</a>
+              </li>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+              {% if page_obj.number == num %}
+                <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+              {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <li class="page-item"><a class="page-link" href="?{% if category %}category={{ category }}&{% endif %}{% if search %}search={{ search }}&{% endif %}page={{ num }}#products-section">{{ num }}</a></li>
+              {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+              <li class="page-item">
+                <a class="page-link" href="?{% if category %}category={{ category }}&{% endif %}{% if search %}search={{ search }}&{% endif %}page={{ page_obj.next_page_number }}#products-section">&raquo;</a>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+    {% else %}
+        <div class="col-12 text-center py-5">
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i> Không tìm thấy sản phẩm phù hợp với yêu cầu của bạn.
+            </div>
+            <a href="{% url 'product_list' %}" class="btn btn-primary mt-3">
+                <i class="fas fa-arrow-left me-2"></i> Quay lại tất cả sản phẩm
+            </a>
+        </div>
+    {% endif %}
+    </div>
+
+    <div class="card my-5">
+        <div class="card-body p-4 bg-light">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h4>Không tìm thấy sản phẩm bạn cần?</h4>
+                    <p class="mb-md-0">Liên hệ với chúng tôi để được tư vấn và đặt hàng theo yêu cầu.</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <a href="#" class="btn btn-primary">
+                        <i class="fas fa-headset me-2"></i> Liên hệ ngay
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="multi-chat-bubble">
+  <span id="multi-chat-label">Liên hệ hỗ trợ</span>
+  <div id="multi-chat-btn">
+    <img src="https://img.icons8.com/fluency/48/000000/chat.png" alt="Chat" />
+  </div>
+  <div id="multi-chat-menu">
+    <a href="https://www.facebook.com/tenfanpage" target="_blank" rel="noopener">
+      <img src="https://img.icons8.com/color/32/000000/facebook-new.png" /> Facebook
+    </a>
+    <a href="mailto:yourmail@gmail.com">
+      <img src="https://img.icons8.com/color/32/000000/gmail-new.png" /> Gmail
+    </a>
+    <a href="https://zalo.me/yourzaloid" target="_blank" rel="noopener">
+      <img src="https://img.icons8.com/color/32/000000/zalo.png" /> Zalo
+    </a>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+        
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const productId = this.getAttribute('data-product-id');
+                const form = this.closest('form');
+                const csrfToken = form.querySelector('input[name="csrfmiddlewaretoken"]').value;
+                const originalText = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang thêm...';
+                this.disabled = true;
+                
+                fetch(`{% url 'add_to_cart' 0 %}`.replace('0', productId), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRFToken': csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: new URLSearchParams({
+                        'quantity': form.querySelector('input[name="quantity"]').value,
+                        'next': form.querySelector('input[name="next"]').value
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        this.innerHTML = '<i class="fas fa-check"></i> Đã thêm';
+                        this.classList.add('btn-success');
+
+                        updateCartDisplay();
+                        setTimeout(() => {
+                            this.innerHTML = originalText;
+                            this.classList.remove('btn-success');
+                            this.disabled = false;
+                        }, 1500);
+                    } else {
+                        throw new Error('Thêm vào giỏ hàng thất bại');
+                    }
+                })
+                .catch(error => {
+                    console.error('Lỗi:', error);
+                    this.innerHTML = '<i class="fas fa-times"></i> Lỗi';
+                    
+                    setTimeout(() => {
+                        this.innerHTML = originalText;
+                        this.disabled = false;
+                    }, 1500);
+                });
+            });
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const btn = document.getElementById('multi-chat-btn');
+        const menu = document.getElementById('multi-chat-menu');
+        let open = false;
+        
+        if (btn && menu) {
+            btn.onclick = function() {
+                open = !open;
+                menu.style.display = open ? 'flex' : 'none';
+            };
+            
+            document.addEventListener('click', function(e) {
+                if (!btn.contains(e.target) && !menu.contains(e.target)) {
+                    menu.style.display = 'none';
+                    open = false;
+                }
+            });
+        }
+    });
+</script>
+{% endblock %} 

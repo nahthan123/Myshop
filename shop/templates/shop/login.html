@@ -1,0 +1,279 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{% block title %}Đăng nhập | MyShop{% endblock %}
+
+{% block style %}
+.auth-card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    padding: 30px;
+    max-width: 450px;
+    margin: 40px auto;
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.auth-icon {
+    font-size: 50px;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+.form-floating {
+    margin-bottom: 15px;
+}
+
+.password-toggle {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    z-index: 10;
+}
+
+.social-login {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.social-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    color: white;
+    font-size: 1.2rem;
+    transition: all 0.3s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.social-circle:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 7px 15px rgba(0,0,0,0.2);
+    color: white;
+}
+
+.facebook-btn {
+    background: #3b5998;
+}
+
+.facebook-btn:hover {
+    background: #2d4373;
+}
+
+.google-btn {
+    background: #ffffff;
+}
+
+.google-btn:hover {
+    background: #f1f1f1;
+}
+
+.google-btn i {
+    background: conic-gradient(from -45deg, #ea4335 110deg, #4285f4 90deg 180deg, #34a853 180deg 270deg, #fbbc05 270deg) 73% 55%/150% 150% no-repeat;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+}
+
+.twitter-btn {
+    background: #000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.twitter-btn:hover {
+    background: #333333;
+}
+
+.x-icon {
+    font-weight: bold;
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+/* Loại bỏ gạch chân cho logo, link navbar */
+.navbar a,
+.navbar a:visited,
+.navbar a:active,
+.navbar a:focus,
+.navbar .navbar-brand,
+.navbar .navbar-brand *,
+.navbar .nav-link,
+.navbar .btn,
+.navbar .btn i,
+.navbar .nav-link i {
+    text-decoration: none !important;
+    background: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.no-underline {
+    text-decoration: none !important;
+}
+
+.no-underline:hover {
+    text-decoration: underline;
+}
+
+:root {
+    --primary-color: #3498db;
+    --accent-color: #ff9800;
+    --header-dark: #2c3e50;
+}
+
+/* Đảm bảo logo trong navbar hiển thị đúng */
+.navbar .navbar-brand .logo-container {
+    background: linear-gradient(135deg, #3498db, #9b59b6) !important;
+}
+
+.navbar .navbar-brand span {
+    background: linear-gradient(90deg, #3498db, #9b59b6) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+}
+
+.navbar, .navbar-brand {
+    background: #2c3e50 !important;
+    color: #fff !important;
+}
+.navbar .nav-link,
+.navbar .dropdown-item,
+.navbar .navbar-brand {
+    color: #fff !important;
+}
+.navbar .nav-link.active,
+.navbar .nav-link:hover,
+.navbar .dropdown-item:hover,
+.navbar .dropdown-item:focus {
+    color: #ff9800 !important;
+    background: rgba(255,255,255,0.08) !important;
+}
+
+/* Màu nền dropdown menu */
+.navbar .dropdown-menu {
+    background: #23272b !important;
+    border: none;
+    box-shadow: 0 4px 16px rgba(44,62,80,0.12);
+}
+
+/* Màu chữ trong dropdown */
+.navbar .dropdown-item {
+    color: #fff !important;
+}
+
+/* Màu chữ khi hover trong dropdown */
+.navbar .dropdown-item:hover,
+.navbar .dropdown-item:focus {
+    color: #ff9800 !important;
+    background: rgba(255,255,255,0.08) !important;
+}
+{% endblock %}
+
+{% block content %}
+<div class="auth-card">
+    <div class="auth-header">
+        <div class="d-flex align-items-center justify-content-center mb-4">
+            <div class="logo-container d-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, #3498db, #9b59b6); width: 50px; height: 50px; border-radius: 10px; margin-right: 12px; box-shadow: 0 4px 15px rgba(52,152,219,0.3); transition: all 0.3s;">
+                <span style="font-weight: 800; color: white; font-size: 28px; text-shadow: 1px 1px 2px rgba(0,0,0,0.2);">M</span>
+            </div>
+            <span style="font-weight: 700; font-size: 2rem; background: linear-gradient(90deg, #3498db, #9b59b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.5px;">MyShop</span>
+        </div>
+        <h2>Đăng nhập</h2>
+        <p class="text-muted">Đăng nhập để tiếp tục mua sắm</p>
+    </div>
+    
+    {% if error_message %}
+        <div class="alert alert-danger d-flex align-items-center justify-content-center mt-2 mb-3 shadow rounded-3" style="font-size: 1.08rem; min-height:48px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#dc3545" class="bi bi-x-octagon me-2" viewBox="0 0 16 16">
+                <path d="M11.46.146a1.5 1.5 0 0 0-2.12 0l-7.19 7.19a1.5 1.5 0 0 0 0 2.12l7.19 7.19a1.5 1.5 0 0 0 2.12 0l7.19-7.19a1.5 1.5 0 0 0 0-2.12l-7.19-7.19zM8 1.293l6.707 6.707a.5.5 0 0 1 0 .707L8 15.707a.5.5 0 0 1-.707 0L.586 8.707a.5.5 0 0 1 0-.707L7.293 1.293a.5.5 0 0 1 .707 0z"/>
+                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+            </svg>
+            <span>{{ error_message }}</span>
+        </div>
+    {% endif %}
+    
+    <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="id_username" name="username" placeholder="Tên đăng nhập" required value="{{ username|default_if_none:'' }}">
+            <label for="id_username">Tên đăng nhập</label>
+        </div>
+        <div class="form-floating mb-3 position-relative">
+            <input type="password" class="form-control" id="id_password" name="password" placeholder="Mật khẩu" required>
+            <label for="id_password">Mật khẩu</label>
+            <span class="password-toggle" onclick="togglePassword()">
+                <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#888" d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 7.61 17 4.5 12 4.5zm0 13c-3.87 0-7.19-2.4-8.48-6C4.81 7.9 8.13 5.5 12 5.5s7.19 2.4 8.48 6c-1.29 3.6-4.61 6-8.48 6zm0-10a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm0 6.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+            </span>
+        </div>
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="remember-me" name="remember">
+            <label class="form-check-label" for="remember-me">
+                Ghi nhớ đăng nhập
+            </label>
+        </div>
+        <div class="d-grid">
+            <button type="submit" class="btn btn-primary btn-lg">
+                Đăng nhập
+            </button>
+        </div>
+    </form>
+    
+    <div class="text-center mt-3">
+        <a href="#" class="text-decoration-none">Quên mật khẩu?</a>
+    </div>
+    
+    <!-- Social login -->
+    <div class="text-center mt-4">
+        <p>Hoặc đăng nhập bằng:</p>
+        <div class="social-login">
+            <a href="#" class="social-circle google-btn me-3">
+                <i class="fab fa-google"></i>
+            </a>
+            <a href="#" class="social-circle facebook-btn me-3">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" class="social-circle twitter-btn">
+                <span class="x-icon">𝕏</span>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Create account -->
+    <div class="text-center mt-4">
+        <p>Chưa có tài khoản? <a href="{% url 'register' %}" class="no-underline">Đăng ký ngay</a></p>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Tự động focus vào ô tên đăng nhập khi vào trang
+    window.onload = function() {
+        document.getElementById('id_username').focus();
+    }
+    function togglePassword() {
+        const passwordInput = document.getElementById('id_password');
+        const icon = document.querySelector('.password-toggle svg');
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            icon.style.opacity = 0.5;
+        } else {
+            passwordInput.type = 'password';
+            icon.style.opacity = 1;
+        }
+    }
+</script>
+{% endblock %}

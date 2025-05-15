@@ -1,0 +1,69 @@
+<!-- shop/templates/shop/includes/footer.html -->
+<footer class="bg-dark text-white pt-5 pb-3">
+    <div class="container">
+        <div class="row">
+            <!-- About -->
+            <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                <h5 class="text-uppercase mb-4"><i class="fas fa-laptop-code me-2"></i>MyShop</h5>
+                <p class="small">Chuyên cung cấp các sản phẩm công nghệ chính hãng với giá tốt nhất thị trường. Uy tín đặt lên hàng đầu.</p>
+                <div class="mt-4">
+                    <a href="#" class="btn btn-outline-light btn-sm me-2"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="btn btn-outline-light btn-sm me-2"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="btn btn-outline-light btn-sm me-2"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="btn btn-outline-light btn-sm"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            
+            <!-- Quick Links -->
+            <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                <h6 class="text-uppercase mb-4 fw-bold">Liên kết nhanh</h6>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="{% url 'product_list' %}" class="text-white text-decoration-none"><i class="fas fa-angle-right me-2"></i>Trang chủ</a></li>
+                    <li class="mb-2"><a href="{% url 'product_list' %}?category=PC" class="text-white text-decoration-none"><i class="fas fa-angle-right me-2"></i>PC</a></li>
+                    <li class="mb-2"><a href="{% url 'product_list' %}?category=laptop" class="text-white text-decoration-none"><i class="fas fa-angle-right me-2"></i>Laptop</a></li>
+                    <li class="mb-2"><a href="{% url 'product_list' %}?category=gaming_laptop" class="text-white text-decoration-none"><i class="fas fa-angle-right me-2"></i>Laptop Gaming</a></li>
+                    <li class="mb-2"><a href="{% url 'view_cart' %}" class="text-white text-decoration-none"><i class="fas fa-angle-right me-2"></i>Giỏ hàng</a></li>
+                </ul>
+            </div>
+            
+            <!-- Contact -->
+            <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                <h6 class="text-uppercase mb-4 fw-bold">Thông tin liên hệ</h6>
+                <p class="small mb-2"><i class="fas fa-map-marker-alt me-2"></i>, Quận XYZ, TP.Đà nẵng</p>
+                <p class="small mb-2"><i class="fas fa-phone-alt me-2"></i>(+84) 344133xxxx</p>
+                <p class="small mb-2"><i class="fas fa-envelope me-2"></i>1412nhatanh@gmail.com</p>
+                <p class="small mb-2"><i class="fas fa-clock me-2"></i>T2-T6: 8:00-20:00, T7-CN: 9:00-18:00</p>
+            </div>
+            
+            <!-- Newsletter -->
+            <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                <h6 class="text-uppercase mb-4 fw-bold">Đăng ký nhận tin</h6>
+                <p class="small">Nhận thông tin mới nhất về sản phẩm và khuyến mãi đặc biệt.</p>
+                <div class="input-group mb-3">
+                    <input type="email" class="form-control" placeholder="Email của bạn" aria-label="Email của bạn">
+                    <button class="btn btn-primary" type="button"><i class="fas fa-paper-plane"></i></button>
+                </div>
+                <p class="small mt-3">
+                    <i class="fas fa-shield-alt me-2"></i>Chúng tôi cam kết bảo mật thông tin của bạn
+                </p>
+            </div>
+        </div>
+        
+        <hr class="my-4">
+        
+        <!-- Bottom Footer -->
+        <div class="row align-items-center">
+            <div class="col-md-7 col-lg-8">
+                <p class="small mb-0">
+                    © 2024 <strong>MyShop</strong>. Tất cả quyền được bảo lưu. Thiết kế và phát triển bởi <a href="#" class="text-white">NaDev</a>
+                </p>
+            </div>
+            <div class="col-md-5 col-lg-4 text-md-end">
+                <div class="small">
+                    <a href="#" class="text-white text-decoration-none me-3">Điều khoản sử dụng</a>
+                    <a href="#" class="text-white text-decoration-none">Chính sách bảo mật</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>

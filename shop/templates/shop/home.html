@@ -1,0 +1,870 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}MyShop - Cửa hàng công nghệ hàng đầu{% endblock %}
+
+{% block style %}
+/* Carousel styling */
+.carousel-item {
+    height: 500px;
+    overflow: hidden;
+}
+
+.carousel-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.carousel-caption {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+    padding: 20px;
+    max-width: 550px;
+    margin: 0 auto;
+}
+
+.carousel-control-prev, .carousel-control-next {
+    width: 5%;
+}
+
+.carousel-indicators li {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+/* Hero section */
+.hero-banner {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    border-radius: 20px;
+    padding: 80px 30px;
+    margin-bottom: 50px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.hero-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+    border-radius: 50%;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    background: linear-gradient(90deg, #fff, #f1f5f9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -1px;
+    line-height: 1.2;
+}
+
+.hero-description {
+    font-size: 1.4rem;
+    opacity: 0.9;
+    margin-bottom: 30px;
+    max-width: 600px;
+    line-height: 1.6;
+}
+
+.btn-hero {
+    background: white;
+    color: var(--primary-color);
+    font-weight: 600;
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    transition: all 0.3s;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border: none;
+}
+
+.btn-hero:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    background: #f8f9fa;
+    color: var(--primary-dark);
+}
+
+/* Product sections */
+.section-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 40px;
+    position: relative;
+    padding-bottom: 15px;
+    color: var(--dark-color);
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+    border-radius: 4px;
+}
+
+.product-card {
+    height: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(52,152,219,0.08), 0 1.5px 4px rgba(44,62,80,0.06);
+    transition: box-shadow 0.3s, transform 0.3s;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card:hover {
+    box-shadow: 0 8px 32px rgba(52,152,219,0.18), 0 3px 8px rgba(44,62,80,0.12);
+    transform: translateY(-6px) scale(1.03);
+}
+
+.product-img-container {
+    height: 200px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+    border-radius: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.product-card:hover .product-img {
+    transform: scale(1.08) rotate(-2deg);
+}
+
+.card-body {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-title {
+    height: 50px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.product-price {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--accent-color);
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+.rating-stars {
+    color: #f39c12;
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+}
+
+.rating-count {
+    color: var(--text-light);
+    font-size: 0.85rem;
+    margin-left: 5px;
+}
+
+.category-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+    font-size: 0.9em;
+    padding: 6px 12px;
+    border-radius: 12px;
+    background-color: var(--primary-light);
+    color: white;
+}
+
+/* Categories section */
+.category-card {
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+    height: 180px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.category-image {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.7);
+    transition: all 0.5s;
+}
+
+.category-card:hover .category-image {
+    filter: brightness(0.9);
+    transform: scale(1.05);
+}
+
+.category-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0));
+    color: white;
+}
+
+.category-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.category-count {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+/* New big icon categories */
+.category-box {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    transition: all 0.3s;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #eaeaea;
+}
+
+.category-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+}
+
+.category-box:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(52,152,219,0.1);
+}
+
+.category-box:hover::before {
+    transform: scaleX(1);
+}
+
+.category-icon {
+    font-size: 60px;
+    margin-bottom: 20px;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #f5f9ff;
+    margin: 0 auto 20px;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s;
+    color: var(--primary-color);
+}
+
+.category-box:hover .category-icon {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white;
+    transform: scale(1.1);
+}
+
+.category-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--dark-color);
+    transition: all 0.3s;
+}
+
+.category-box:hover .category-title {
+    color: var(--primary-color);
+}
+
+.category-subtitle {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.subcategory-list {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    text-align: center;
+    width: 100%;
+}
+
+.subcategory-list li {
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+.subcategory-list li a {
+    color: var(--text-light);
+    text-decoration: none;
+    transition: all 0.2s;
+    display: block;
+    padding: 2px 0;
+}
+
+.subcategory-list li a:hover {
+    color: var(--primary-color);
+    transform: translateX(3px);
+}
+
+/* Features section */
+.features-section {
+    background-color: var(--light-color);
+    padding: 60px 0;
+    margin: 60px 0;
+    border-radius: 20px;
+}
+
+.feature-item {
+    text-align: center;
+    padding: 30px 20px;
+    transition: all 0.3s;
+}
+
+.feature-item:hover {
+    transform: translateY(-10px);
+}
+
+.feature-icon {
+    font-size: 50px;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.feature-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: var(--dark-color);
+}
+
+.feature-desc {
+    color: var(--text-light);
+    line-height: 1.6;
+}
+
+/* Promotion section */
+.promo-banner {
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    margin: 60px 0;
+    height: 300px;
+}
+
+.promo-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.promo-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(67, 97, 238, 0.9), rgba(67, 97, 238, 0.7), transparent);
+    padding: 40px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.promo-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+}
+
+.promo-desc {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    line-height: 1.5;
+    opacity: 0.9;
+}
+
+.btn-promo {
+    background: white;
+    color: var(--primary-color);
+    border: none;
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s;
+    align-self: flex-start;
+}
+
+.btn-promo:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    background: #f8f9fa;
+}
+
+@media (max-width: 992px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-description {
+        font-size: 1.2rem;
+    }
+    
+    .promo-content {
+        width: 70%;
+    }
+    
+    .promo-title {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .promo-content {
+        width: 100%;
+        background: linear-gradient(to right, rgba(52, 152, 219, 0.9), rgba(52, 152, 219, 0.8));
+    }
+    
+    .category-card {
+        height: 150px;
+    }
+    
+    .hero-banner {
+        padding: 50px 20px;
+    }
+}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Hero Banner -->
+    <div class="hero-banner">
+        <div class="row">
+            <div class="col-lg-7">
+                <h1 class="hero-title">Công nghệ tốt nhất cho cuộc sống hiện đại</h1>
+                <p class="hero-description">Khám phá các sản phẩm công nghệ chất lượng cao với giá cả hợp lý. Sự hài lòng của bạn là ưu tiên hàng đầu của chúng tôi.</p>
+                <a href="{% url 'product_list' %}" class="btn btn-hero">
+                    <i class="fas fa-shopping-bag me-2"></i>Mua sắm ngay
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Carousel Section -->
+    <div id="mainCarousel" class="carousel slide my-5" data-bs-ride="carousel">
+        <ol class="carousel-indicators">
+            <li data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active"></li>
+            <li data-bs-target="#mainCarousel" data-bs-slide-to="1"></li>
+            <li data-bs-target="#mainCarousel" data-bs-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner rounded-3 shadow">
+            <div class="carousel-item active">
+                <img src="{% static 'images/banner1.png' %}" class="d-block w-100" alt="Banner 1">
+                <div class="carousel-caption d-none d-md-block">
+                    <h2>Laptop Gaming Cao Cấp</h2>
+                    <p>Trải nghiệm chơi game đỉnh cao với các mẫu laptop gaming mới nhất</p>
+                    <a href="{% url 'product_list' %}?category=Laptop%20Gaming" class="btn btn-primary">Mua ngay</a>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="{% static 'images/banner2.png' %}" class="d-block w-100" alt="Banner 2">
+                <div class="carousel-caption d-none d-md-block">
+                    <h2>PC Gaming Chiến Mọi Game</h2>
+                    <p>Hiệu năng mạnh mẽ, đồ họa sắc nét với các dòng PC cấu hình cao</p>
+                    <a href="{% url 'product_list' %}?category=PC" class="btn btn-primary">Khám phá ngay</a>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="{% static 'images/banner3.png' %}" class="d-block w-100" alt="Banner 3">
+                <div class="carousel-caption d-none d-md-block">
+                    <h2>Phụ Kiện Công Nghệ</h2>
+                    <p>Nâng cấp thiết bị của bạn với các phụ kiện chất lượng cao</p>
+                    <a href="{% url 'product_list' %}?category=phụ%20kiện%20máy%20tính" class="btn btn-primary">Xem ngay</a>
+                </div>
+            </div>
+        </div>
+        <a class="carousel-control-prev" href="#mainCarousel" role="button" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#mainCarousel" role="button" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </a>
+    </div>
+    
+    <!-- Search Bar -->
+    <div class="card shadow-sm mb-5">
+        <div class="card-body p-4">
+            <form action="{% url 'product_list' %}" method="get" class="row g-3 align-items-center">
+                <div class="col-lg-4">
+                    <select name="category" class="form-select">
+                        <option value="">Tất cả danh mục</option>
+                        <option value="PC">PC</option>
+                        <option value="Laptop">Laptop</option>
+                        <option value="Laptop Gaming">Laptop Gaming</option>
+                        <option value="Laptop office">Laptop Văn Phòng</option>
+                        <option value="phụ kiện máy tính">Phụ kiện máy tính</option>
+                    </select>
+                </div>
+                <div class="col-lg-6">
+                    <input type="text" name="search" class="form-control" placeholder="Tìm kiếm sản phẩm...">
+                </div>
+                <div class="col-lg-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search me-2"></i>Tìm kiếm
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Categories Section -->
+    <h2 class="section-title">Danh mục sản phẩm</h2>
+    <div class="row g-4 mb-5">
+        <div class="col-6 col-md-4 col-lg-2">
+            <a href="{% url 'product_list' %}?category=PC" class="text-decoration-none">
+                <div class="category-box">
+                    <div class="category-icon">
+                        <i class="fas fa-desktop"></i>
+                    </div>
+                    <h3 class="category-title">PC</h3>
+                    <p class="category-subtitle">Máy tính để bàn</p>
+                    <ul class="subcategory-list">
+                        <li><a href="{% url 'product_list' %}?search=gaming pc">PC Gaming</a></li>
+                        <li><a href="{% url 'product_list' %}?search=văn phòng pc">PC Văn phòng</a></li>
+                        <li><a href="{% url 'product_list' %}?search=đồ họa pc">PC Đồ họa</a></li>
+                    </ul>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <a href="{% url 'product_list' %}?category=Laptop" class="text-decoration-none">
+                <div class="category-box">
+                    <div class="category-icon">
+                        <i class="fas fa-laptop"></i>
+                    </div>
+                    <h3 class="category-title">Laptop</h3>
+                    <p class="category-subtitle">Máy tính xách tay</p>
+                    <ul class="subcategory-list">
+                        <li><a href="{% url 'product_list' %}?search=ultrabook">Ultrabook</a></li>
+                        <li><a href="{% url 'product_list' %}?search=macbook">MacBook</a></li>
+                        <li><a href="{% url 'product_list' %}?search=laptop sinh viên">Laptop Sinh viên</a></li>
+                    </ul>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <a href="{% url 'product_list' %}?category=Laptop%20Gaming" class="text-decoration-none">
+                <div class="category-box">
+                    <div class="category-icon">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <h3 class="category-title">Gaming</h3>
+                    <p class="category-subtitle">Laptop chơi game</p>
+                    <ul class="subcategory-list">
+                        <li><a href="{% url 'product_list' %}?search=msi gaming">MSI Gaming</a></li>
+                        <li><a href="{% url 'product_list' %}?search=asus rog">Asus ROG</a></li>
+                        <li><a href="{% url 'product_list' %}?search=acer predator">Acer Predator</a></li>
+                    </ul>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <a href="{% url 'product_list' %}?category=Laptop%20office" class="text-decoration-none">
+                <div class="category-box">
+                    <div class="category-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <h3 class="category-title">Văn phòng</h3>
+                    <p class="category-subtitle">Laptop văn phòng</p>
+                    <ul class="subcategory-list">
+                        <li><a href="{% url 'product_list' %}?search=dell văn phòng">Dell Business</a></li>
+                        <li><a href="{% url 'product_list' %}?search=hp probook">HP ProBook</a></li>
+                        <li><a href="{% url 'product_list' %}?search=lenovo thinkpad">Lenovo ThinkPad</a></li>
+                    </ul>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <a href="{% url 'product_list' %}?category=phụ%20kiện%20máy%20tính" class="text-decoration-none">
+                <div class="category-box">
+                    <div class="category-icon">
+                        <i class="fas fa-keyboard"></i>
+                    </div>
+                    <h3 class="category-title">Phụ kiện</h3>
+                    <p class="category-subtitle">Bàn phím, chuột...</p>
+                    <ul class="subcategory-list">
+                        <li><a href="{% url 'product_list' %}?search=bàn phím">Bàn phím</a></li>
+                        <li><a href="{% url 'product_list' %}?search=chuột">Chuột</a></li>
+                        <li><a href="{% url 'product_list' %}?search=tai nghe">Tai nghe</a></li>
+                    </ul>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <a href="{% url 'product_list' %}" class="text-decoration-none">
+                <div class="category-box">
+                    <div class="category-icon">
+                        <i class="fas fa-th-large"></i>
+                    </div>
+                    <h3 class="category-title">Tất cả</h3>
+                    <p class="category-subtitle">Mọi sản phẩm</p>
+                    <ul class="subcategory-list">
+                        <li><a href="{% url 'product_list' %}?sort=price_asc">Giá thấp đến cao</a></li>
+                        <li><a href="{% url 'product_list' %}?sort=price_desc">Giá cao đến thấp</a></li>
+                        <li><a href="{% url 'product_list' %}?sort=newest">Mới nhất</a></li>
+                    </ul>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Latest Products -->
+    <div class="mb-5">
+        <div class="d-flex justify-content-between align-items-end mb-4">
+            <h2 class="section-title mb-0">Sản phẩm mới nhất</h2>
+            <a href="{% url 'product_list' %}?sort=newest" class="btn btn-outline-primary">
+                <i class="fas fa-th-list me-2"></i>Xem tất cả
+            </a>
+        </div>
+        
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+            {% for product in latest_products %}
+            <div class="col">
+                <a href="{% url 'product_detail' product.pk %}" class="text-decoration-none text-dark" style="display:block; height: 100%;">
+                    <div class="card product-card h-100" style="cursor:pointer;">
+                        <div class="position-relative">
+                            <span class="category-badge badge bg-info">{{ product.get_category_display }}</span>
+                            <div class="product-img-container">
+                                {% if product.image %}
+                                    <img src="{{ product.image.url }}" class="product-img" alt="{{ product.name }}">
+                                {% else %}
+                                    <img src="{% static 'images/no-image.png' %}" class="product-img" alt="No image">
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title product-title">{{ product.name }}</h5>
+                            <p class="product-price mb-2 text-danger fw-bold" style="font-size:1.2rem;">
+                                {{ product.price|floatformat:0|intcomma }} <span class="text-secondary" style="font-size:1rem;">₫</span>
+                            </p>
+                            
+                            <!-- Hiển thị đánh giá sao -->
+                            <div class="rating-stars">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= product.rating %}
+                                        <i class="fas fa-star"></i>
+                                    {% elif forloop.counter <= product.rating|add:0.5 %}
+                                        <i class="fas fa-star-half-alt"></i>
+                                    {% else %}
+                                        <i class="far fa-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                                <span class="rating-count">({{ product.rating_count|default:"0" }})</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Features Section -->
+    <div class="features-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <h3 class="feature-title">Giao hàng nhanh</h3>
+                        <p class="feature-desc">Miễn phí giao hàng toàn quốc cho đơn hàng từ 500.000 đồng</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3 class="feature-title">Bảo hành dài hạn</h3>
+                        <p class="feature-desc">Tất cả sản phẩm đều được bảo hành chính hãng từ 12 - 36 tháng</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-sync-alt"></i>
+                        </div>
+                        <h3 class="feature-title">30 ngày đổi trả</h3>
+                        <p class="feature-desc">Đổi trả sản phẩm trong vòng 30 ngày nếu có lỗi từ nhà sản xuất</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <h3 class="feature-title">Hỗ trợ 24/7</h3>
+                        <p class="feature-desc">Đội ngũ hỗ trợ kỹ thuật luôn sẵn sàng giải đáp mọi thắc mắc</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Top Rated Products -->
+    <div class="mb-5">
+        <div class="d-flex justify-content-between align-items-end mb-4">
+            <h2 class="section-title mb-0">Sản phẩm được đánh giá cao</h2>
+            <a href="{% url 'product_list' %}" class="btn btn-outline-primary">
+                <i class="fas fa-th-list me-2"></i>Xem tất cả
+            </a>
+        </div>
+        
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+            {% for product in top_rated_products %}
+            <div class="col">
+                <a href="{% url 'product_detail' product.pk %}" class="text-decoration-none text-dark" style="display:block; height: 100%;">
+                    <div class="card product-card h-100" style="cursor:pointer;">
+                        <div class="position-relative">
+                            <span class="category-badge badge bg-info">{{ product.get_category_display }}</span>
+                            <div class="product-img-container">
+                                {% if product.image %}
+                                    <img src="{{ product.image.url }}" class="product-img" alt="{{ product.name }}">
+                                {% else %}
+                                    <img src="{% static 'images/no-image.png' %}" class="product-img" alt="No image">
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title product-title">{{ product.name }}</h5>
+                            <p class="product-price mb-2 text-danger fw-bold" style="font-size:1.2rem;">
+                                {{ product.price|floatformat:0|intcomma }} <span class="text-secondary" style="font-size:1rem;">₫</span>
+                            </p>
+                            
+                            <!-- Hiển thị đánh giá sao -->
+                            <div class="rating-stars">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= product.rating %}
+                                        <i class="fas fa-star"></i>
+                                    {% elif forloop.counter <= product.rating|add:0.5 %}
+                                        <i class="fas fa-star-half-alt"></i>
+                                    {% else %}
+                                        <i class="far fa-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                                <span class="rating-count">({{ product.rating_count|default:"0" }})</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Promotion Banner -->
+    <div class="promo-banner">
+        <img src="{% static 'images/banner3.png' %}" class="promo-image" alt="Special Promotion">
+        <div class="promo-content">
+            <h2 class="promo-title">Khuyến mãi đặc biệt</h2>
+            <p class="promo-desc">Giảm đến 20% cho tất cả laptop gaming và PC mới nhất. Thời gian có hạn!</p>
+            <a href="{% url 'product_list' %}?category=Laptop%20Gaming" class="btn btn-promo">Mua ngay</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Tự động cuộn khi có thay đổi hash trong URL
+    document.addEventListener('DOMContentLoaded', function() {
+        // Khởi tạo carousel
+        var carousel = new bootstrap.Carousel(document.getElementById('mainCarousel'), {
+            interval: 5000,
+            wrap: true,
+            keyboard: true
+        });
+        
+        if (window.location.hash) {
+            const targetElement = document.querySelector(window.location.hash);
+            if (targetElement) {
+                setTimeout(function() {
+                    targetElement.scrollIntoView({behavior: 'smooth'});
+                }, 100);
+            }
+        }
+    });
+</script>
+{% endblock %}
